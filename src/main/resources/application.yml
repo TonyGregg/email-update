@@ -1,0 +1,45 @@
+server:
+  port: 9090
+  ip: 1.2.3.4
+spring:
+  application:
+    name: Mini-Cars-Email-update-Servie
+  datasource:
+    hikari:
+      maximum-pool-size: 35
+      pool-name: mini-car-email-update-db-pool
+    url: jdbc:mysql://localhost:3306/sys
+    userName: tacos
+    password: password123
+#logging:
+#  level: DEBUG
+#  org.springframework.security: DEBUG
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"
+    file: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  level:
+      org.springframework.web: DEBUG
+  file: app.log
+
+info:
+  app:
+    name: Mini Cars Inc Spring Boot Application Email Update Serice
+    description: Mini Cars Inc is a privately owned organization.
+    version: Curious? Really !
+  helpline:
+    email: admin@antony.com
+    phone: 0120-32-5252
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
+      base-path: /admin
+  endpoint:
+    health:
+      show-details: always
+health:
+  config:
+    enabled: true
