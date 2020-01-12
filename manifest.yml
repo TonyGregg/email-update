@@ -3,7 +3,7 @@ applications:
     disk_quota: 1G
     instances: 1
     memory: 512M
-    path: build/email-update-1.0.jar
+    path: build/libs/email-update-1.0.jar
     timeout: 120
     random-route: true
       # https://github.com/cloudfoundry/java-buildpack/issues/663 -- To read more about memory configuration
