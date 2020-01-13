@@ -4,6 +4,7 @@ import com.genil.apps.contacts.emailupdate.exception.EmailNotFoundException;
 import com.genil.apps.contacts.emailupdate.model.CustomerContact;
 import com.genil.apps.contacts.emailupdate.model.Email;
 import com.genil.apps.contacts.emailupdate.model.Phone;
+import com.genil.apps.contacts.emailupdate.proxies.PhoneServiceProxy;
 import com.genil.apps.contacts.emailupdate.repos.EmailRepo;
 import com.genil.apps.contacts.emailupdate.utils.environment.InstanceInformationService;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,9 @@ public class EmailController {
     String phoneURI;
     String phoneApi = "/api/v1/contacts/phone/";
 
+    @Autowired
+    private PhoneServiceProxy phoneServiceProxy;
+
 
     @GetMapping("/emails/all")
     public List<Email> getAllEmails(@RequestParam @Max(200) @Min(0) Integer pageNumber,
@@ -80,8 +84,13 @@ public class EmailController {
         log.info("Retrieved email {} ", email);
 
         log.info("Phone URI "+ phoneURI + phoneApi + id);
-        Phone phone = this.restTemplate.getForObject(phoneURI + phoneApi + id, Phone.class);
-        log.info("Retrieved phone from rest template proxy client {} ", phone);
+        Phone phone = null;
+//        this.restTemplate.getForObject(phoneURI + phoneApi + id, Phone.class);
+//        log.info("Retrieved phone from rest template proxy client {} ", phone);
+
+        phone = phoneServiceProxy.getOnePhone(id);
+
+        log.info("Retrieved phone using feign client & service discovery {} ",phone);
 
         customerContact.setEmail(email);
         customerContact.setPhone(phone);

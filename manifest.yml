@@ -1,5 +1,5 @@
 applications:
-  - name: email-update-service
+  - name: mini-cars-email-update-service
     disk_quota: 1G
     instances: 1
     memory: 512M
