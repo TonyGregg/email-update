@@ -5,6 +5,7 @@ import com.genil.apps.contacts.emailupdate.model.CustomerContact;
 import com.genil.apps.contacts.emailupdate.model.Email;
 import com.genil.apps.contacts.emailupdate.model.Phone;
 import com.genil.apps.contacts.emailupdate.repos.EmailRepo;
+import com.genil.apps.contacts.emailupdate.utils.environment.InstanceInformationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +39,10 @@ public class EmailController {
     @Autowired
     RestTemplate restTemplate;
 
-    @Value("${PHONE_UPDATE_SERVICE_URI:http://10.0.0.9:9092}")
+    @Autowired
+    private InstanceInformationService instanceInformationService;
+
+    @Value("${PHONE_UPDATE_SERVICE_URI:http://localhost:9092}")
     String phoneURI;
     String phoneApi = "/api/v1/contacts/phone/";
 
@@ -81,6 +85,7 @@ public class EmailController {
 
         customerContact.setEmail(email);
         customerContact.setPhone(phone);
+        customerContact.setEnvironmentInfo(instanceInformationService.retrieveInstanceInfo());
 
         return customerContact;
     }

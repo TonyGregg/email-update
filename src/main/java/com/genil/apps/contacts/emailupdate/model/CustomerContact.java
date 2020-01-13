@@ -10,4 +10,5 @@ import lombok.Data;
 public class CustomerContact {
     Phone phone;
     Email email;
+    String environmentInfo;
 }
