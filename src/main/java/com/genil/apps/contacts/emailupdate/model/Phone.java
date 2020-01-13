@@ -18,4 +18,6 @@ public class Phone {
     private String userName;
     private Boolean isPrimary;
 
+    private String environmentInfo;
+
 }

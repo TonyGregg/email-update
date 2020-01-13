@@ -11,4 +11,5 @@ public class CustomerContact {
     Phone phone;
     Email email;
     String environmentInfo;
+    String phoneServiceEnvInfo;
 }

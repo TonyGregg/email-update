@@ -79,13 +79,14 @@ public class EmailController {
 
         log.info("Retrieved email {} ", email);
 
-        log.info("Phone URI "+phoneURI +phoneApi + id);
+        log.info("Phone URI "+ phoneURI + phoneApi + id);
         Phone phone = this.restTemplate.getForObject(phoneURI + phoneApi + id, Phone.class);
-        log.info("Retrieved phone from feign proxy client {} ", phone);
+        log.info("Retrieved phone from rest template proxy client {} ", phone);
 
         customerContact.setEmail(email);
         customerContact.setPhone(phone);
         customerContact.setEnvironmentInfo(instanceInformationService.retrieveInstanceInfo());
+        customerContact.setPhoneServiceEnvInfo(phone.getEnvironmentInfo());
 
         return customerContact;
     }
