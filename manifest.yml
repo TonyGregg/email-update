@@ -1,16 +1,17 @@
 applications:
-  - name: mini-cars-email-update-service
-    disk_quota: 1G
-    instances: 1
+  - name: email-update-service
     memory: 512M
+    disk-quota: 1G
     path: build/libs/email-update-1.0.jar
     timeout: 120
     random-route: true
-      # https://github.com/cloudfoundry/java-buildpack/issues/663 -- To read more about memory configuration
-    env:
-      JAVA_OPTS: '-XX:ReservedCodeCacheSize=32M -XX:MaxDirectMemorySize=32M'
-      JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 30}, jre: {version: 11.+}]'
-    buildpacks:
-      - https://github.com/cloudfoundry/java-buildpack.git
-    stack: cflinuxfs3
-
+#    env:
+#      JAVA_OPTS: '-XX:ReservedCodeCacheSize=32M -XX:MaxDirectMemorySize=32M'
+#      JBP_CONFIG_OPEN_JDK_JRE: '[memory_calculator: {stack_threads: 30}, jre: {version: 11.+}]'
+#      buildpacks:
+#        - https://github.com/cloudfoundry/java-buildpack.git
+#      stack: cflinuxfs3
+    services:
+      - naming-server
+      - config-server
+      - hystrix-dashboard

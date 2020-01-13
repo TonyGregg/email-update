@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * Created by Antony Genil Gregory on 1/12/2020 8:54 PM
  * For project : email-update
  **/
-@FeignClient(name = "mini-cars-phone-update-service")
+@FeignClient(name = "phone-update-service")
 public interface PhoneServiceProxy {
     @GetMapping("/api/v1/contacts/phone/{id}")
     public Phone getOnePhone(@PathVariable(value = "id") Long id);

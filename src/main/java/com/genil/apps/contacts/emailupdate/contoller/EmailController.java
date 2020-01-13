@@ -7,9 +7,12 @@ import com.genil.apps.contacts.emailupdate.model.Phone;
 import com.genil.apps.contacts.emailupdate.proxies.PhoneServiceProxy;
 import com.genil.apps.contacts.emailupdate.repos.EmailRepo;
 import com.genil.apps.contacts.emailupdate.utils.environment.InstanceInformationService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.ribbon.proxy.annotation.Hystrix;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -74,6 +77,7 @@ public class EmailController {
 
 
     @GetMapping("/customer/{id}")
+    @HystrixCommand(fallbackMethod = "getCustomerContactFallBack")
     public CustomerContact getCustomerContact(@PathVariable Long id) {
         log.info("Id received : "+id);
         // Retrieve Email Data from Email Repo
@@ -91,6 +95,32 @@ public class EmailController {
         phone = phoneServiceProxy.getOnePhone(id);
 
         log.info("Retrieved phone using feign client & service discovery {} ",phone);
+
+        customerContact.setEmail(email);
+        customerContact.setPhone(phone);
+        customerContact.setEnvironmentInfo(instanceInformationService.retrieveInstanceInfo());
+        customerContact.setPhoneServiceEnvInfo(phone.getEnvironmentInfo());
+
+        return customerContact;
+    }
+
+    public CustomerContact getCustomerContactFallBack(Long id) {
+        log.info("Fall back method ..Id received : "+id);
+        // Retrieve Email Data from Email Repo
+        CustomerContact customerContact = new CustomerContact();
+        Email email =  emailRepo.findById(id).orElseThrow(()-> new EmailNotFoundException("Email do not exist for this " +
+                "id "+id));
+
+        log.info("Retrieved email {} ", email);
+
+        log.info("Phone URI "+ phoneURI + phoneApi + id);
+        Phone phone = null;
+//        this.restTemplate.getForObject(phoneURI + phoneApi + id, Phone.class);
+//        log.info("Retrieved phone from rest template proxy client {} ", phone);
+
+        phone = new Phone();
+        phone.setEnvironmentInfo("Dummy... dummy");
+        phone.setPhoneNumber("123-444-5555");
 
         customerContact.setEmail(email);
         customerContact.setPhone(phone);
