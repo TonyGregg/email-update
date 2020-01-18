@@ -6,6 +6,7 @@ import com.genil.apps.contacts.emailupdate.model.Email;
 import com.genil.apps.contacts.emailupdate.model.Phone;
 import com.genil.apps.contacts.emailupdate.proxies.PhoneServiceProxy;
 import com.genil.apps.contacts.emailupdate.repos.EmailRepo;
+import com.genil.apps.contacts.emailupdate.service.PhoneDiscoveryService;
 import com.genil.apps.contacts.emailupdate.utils.environment.InstanceInformationService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.ribbon.proxy.annotation.Hystrix;
@@ -45,6 +46,9 @@ public class EmailController {
 
     @Autowired
     private InstanceInformationService instanceInformationService;
+
+    @Autowired
+    private PhoneDiscoveryService phoneDiscoveryService;
 
     @Value("${PHONE_UPDATE_SERVICE_URI:http://localhost:9092}")
     String phoneURI;
@@ -89,12 +93,13 @@ public class EmailController {
 
         log.info("Phone URI "+ phoneURI + phoneApi + id);
         Phone phone = null;
-//        this.restTemplate.getForObject(phoneURI + phoneApi + id, Phone.class);
-//        log.info("Retrieved phone from rest template proxy client {} ", phone);
+//        phone = this.restTemplate.getForObject(phoneURI + phoneApi + id, Phone.class);
+        phone = this.restTemplate.getForObject(phoneDiscoveryService.getServiceURL("mini-cars-phone-update-service", phoneApi + id), Phone.class);
+        log.info("Retrieved phone from rest template proxy client {} ", phone);
 
-        phone = phoneServiceProxy.getOnePhone(id);
+//        phone = phoneServiceProxy.getOnePhone(id);
 
-        log.info("Retrieved phone using feign client & service discovery {} ",phone);
+//        log.info("Retrieved phone using feign client & service discovery {} ",phone);
 
         customerContact.setEmail(email);
         customerContact.setPhone(phone);
